@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>You look _____.</title>
+		<style>
+			*{
+				box-sizing: content-box;
+				padding: 0px;
+				margin: 0px;
+				overflow: hidden;
+			}
+			html{
+				height: 100%;
+				width: 100%;
+			}
+
+			h1{
+				font-size: 3em;
+				font-family: cursive;
+			}
+
+			p{
+				font-size:1.5em;
+				text-align:center;
+			}
+
+			button{
+				width: 30%;
+				padding: 10px;
+
+				border-radius: 10px;
+				font-size: 1.5em;
+				font-weight: 600;
+			}
+			body{
+				display:flex;
+				flex-direction:column;
+				align-items: center;
+				justify-content: center;
+				height:100%;
+				width:100%;
+				gap:20px;
+
+				background: rgb(7,36,36);
+				background: linear-gradient(0deg, rgb(7,36,36) 0%, rgb(24, 190, 193) 100%);
+			}
+			.container{
+				display:flex;
+				flex-direction: column;
+				gap:20px;
+			}
+			.card{
+				display:flex;
+				flex-direction: column;
+				align-items:center;
+				justify-content:center;
+
+				height: 55vh;
+				min-height: 500px;
+				width: 25vh;
+				min-width: 300px;
+				gap: 10px;
+
+				border:2px solid black;
+				border-radius: 15px;
+				box-shadow: 0px 0px 15px 5px rgba(0,0,0,.5);
+				background: #f6f6f6;
+			}
+			.btn-container{
+				display:flex;
+				justify-content: center;
+			}
+			.start-btn{
+				display:flex;
+				justify-content:center;
+			}
+			.game-btns{
+				display:none;
+				justify-content:space-around;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="card" onclick="cardNext()">
+				<h1>Emotion</h1>
+				<p>Why you feel the emotion</p>
+			</div>
+			<div class="button-container">
+				<div class="start-btn">
+					<button onclick="toggleState()">Start!</button>
+				</div>
+				<div class="game-btns">
+					<button onclick="rendNext()">Next</button>
+					<button onclick="toggleState()">Finish</button>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			let gameStart=false;
+			let startBtn= document.getElementsByClassName("start-btn")[0];
+			let gameBtns= document.getElementsByClassName("game-btns")[0];
+			let card = document.getElementsByClassName("card")[0];
+			let words = [["Happy","I got _____"],["Sleepy","I went to bed at _____"],["Angry","Bob _____"],["Sad","I lost my ____"],["Surprised","I saw _____"],["Tired","I ____"],["Fine","I slept well"],["Blue","I got a bad grade"],["Busy","I have a lot of homework"],["Bored","I dont like [English]"],["Nervous","I have a test"],["Depressed","My pet died"]];
+			let randList = randomize(words);
+			let curLocation= 0;
+
+			function randomize(ray){
+				let locations = [];
+				let temp=[];
+				let cur=0;
+				while(temp.length !== ray.length){
+					let ran = Math.floor(Math.random() * ray.length)
+					if (locations[ran] === undefined){
+						locations[ran]=1;
+						temp[cur] = ray[ran];
+						cur++
+					}
+				}
+				return temp;
+			}
+
+			function rendNext(){
+				if (curLocation < randList.length){
+					card.childNodes[1].innerHTML=randList[curLocation][0];
+					card.childNodes[3].innerHTML=randList[curLocation][1];
+					curLocation++;
+				}
+				if (curLocation === randList.length){
+					curLocation = 0;
+					randList = randomize(words.filter((pair)=>{return pair[0] !== randList[randList.length -1][0]}));
+				}
+			}
+
+			function cardNext(){
+				if (gameStart){
+					rendNext();
+				}
+			}
+
+			function toggleState(){
+				gameStart = !gameStart;
+				
+				if(gameStart){
+					startBtn.style.display="none";
+					gameBtns.style.display="flex";
+					rendNext()
+				} else {
+					startBtn.style.display="flex";
+					gameBtns.style.display="none";
+					randList=randomize(words);
+					card.childNodes[1].innerHTML="Emotion";
+					card.childNodes[3].innerHTML="Why you feel the emotion";
+					curLocation = 0;
+				}
+			}
+			</script>
+	</body>
+</html>
